@@ -31,9 +31,20 @@ class Base2D extends hxd.App {
     customGraphics.endFill();
   }
 
+  static function updateScore(s2d) {
+    var font : h2d.Font = hxd.Res.gravityFont.toFont();
+    var tf = new h2d.Text(font, s2d);
+    tf.textColor = 0xFFFFFF;
+    tf.text = "Score: " + Std.string(Base2D.score);
+    tf.y = 20;
+    tf.x = 20;
+    tf.scale(2);
+  }
+
   function updateScreen() {
     Base2D.loadOfficeMap(new h2d.Object(s2d), s2d);
     Base2D.loadRectangle(s2d);
+    Base2D.updateScore(s2d);
   }
 
   function setScreen() {

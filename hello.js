@@ -194,6 +194,22 @@ Base2D.loadRectangle = function(s2d) {
 	customGraphics.drawRect(Base2D.xRandom,Base2D.yRandom,Base2D.squareSide,Base2D.squareSide);
 	customGraphics.endFill();
 };
+Base2D.updateScore = function(s2d) {
+	var font = hxd_Res.get_loader().loadCache("gravityFont.fnt",hxd_res_BitmapFont).toFont();
+	var tf = new h2d_Text(font,s2d);
+	tf.set_textColor(16777215);
+	tf.set_text("Score: " + Std.string(Base2D.score));
+	tf.posChanged = true;
+	tf.y = 20;
+	tf.posChanged = true;
+	tf.x = 20;
+	var _g = tf;
+	_g.posChanged = true;
+	_g.scaleX *= 2;
+	var _g = tf;
+	_g.posChanged = true;
+	_g.scaleY *= 2;
+};
 Base2D.main = function() {
 	hxd_Res.set_loader(new hxd_res_Loader(new hxd_fs_EmbedFileSystem(haxe_Unserializer.run("oy13:officeMap.PNGty15:gravityFont.pngty15:gravityFont.fnttg"))));
 	var base = new Base2D();
@@ -203,6 +219,7 @@ Base2D.prototype = $extend(hxd_App.prototype,{
 	updateScreen: function() {
 		Base2D.loadOfficeMap(new h2d_Object(this.s2d),this.s2d);
 		Base2D.loadRectangle(this.s2d);
+		Base2D.updateScore(this.s2d);
 	}
 	,setScreen: function() {
 		this.updateScreen();
