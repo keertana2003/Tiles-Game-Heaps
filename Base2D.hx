@@ -41,15 +41,52 @@ class Base2D extends hxd.App {
     tf.scale(2);
   }
 
+  function isValidClick(x, y):Bool {
+    return((x > Base2D.xRandom) && (x <= (Base2D.xRandom + Base2D.squareSide)) 
+      && (y > Base2D.yRandom) && (y <= (Base2D.yRandom + Base2D.squareSide)));
+  }
+
   function updateScreen() {
     Base2D.loadOfficeMap(new h2d.Object(s2d), s2d);
     Base2D.loadRectangle(s2d);
     Base2D.updateScore(s2d);
   }
 
+
+  function getX(event: String): Int {
+    var eventX = event.split(',')[0];
+    eventX = eventX.substr(6,eventX.length);
+    trace(eventX);
+    return Std.parseInt(eventX);
+  }
+
+  function getY(event: String): Int {
+    var eventY = event.split(',')[1];
+    eventY = eventY.substr(0,eventY.length-1);
+    trace(eventY);
+    return Std.parseInt(eventY);
+  }
+
   function setScreen() {
     updateScreen();
-
+    //on Click / Event
+    function onEvent(event : hxd.Event) {
+      switch(event.kind) {
+        case EPush:
+          trace(event.toString());
+          s2d.removeChildren();
+          if(isValidClick(getX(event.toString()), getY(event.toString()))) {
+            Base2D.score = Base2D.score + 1;
+            updateScreen();
+          }
+          else {
+            Window.getInstance().removeEventTarget(onEvent);
+            //gameOverScreen();
+          }
+        case _: trace('other');
+      }
+    }
+    hxd.Window.getInstance().addEventTarget(onEvent);
   }
 
   //main entry point

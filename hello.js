@@ -216,13 +216,49 @@ Base2D.main = function() {
 };
 Base2D.__super__ = hxd_App;
 Base2D.prototype = $extend(hxd_App.prototype,{
-	updateScreen: function() {
+	isValidClick: function(x,y) {
+		if(x > Base2D.xRandom && x <= Base2D.xRandom + Base2D.squareSide && y > Base2D.yRandom) {
+			return y <= Base2D.yRandom + Base2D.squareSide;
+		} else {
+			return false;
+		}
+	}
+	,updateScreen: function() {
 		Base2D.loadOfficeMap(new h2d_Object(this.s2d),this.s2d);
 		Base2D.loadRectangle(this.s2d);
 		Base2D.updateScore(this.s2d);
 	}
+	,getX: function(event) {
+		var eventX = event.split(",")[0];
+		eventX = HxOverrides.substr(eventX,6,eventX.length);
+		haxe_Log.trace(eventX,{ fileName : "Base2D.hx", lineNumber : 59, className : "Base2D", methodName : "getX"});
+		return Std.parseInt(eventX);
+	}
+	,getY: function(event) {
+		var eventY = event.split(",")[1];
+		eventY = HxOverrides.substr(eventY,0,eventY.length - 1);
+		haxe_Log.trace(eventY,{ fileName : "Base2D.hx", lineNumber : 66, className : "Base2D", methodName : "getY"});
+		return Std.parseInt(eventY);
+	}
 	,setScreen: function() {
+		var _gthis = this;
 		this.updateScreen();
+		var onEvent = null;
+		onEvent = function(event) {
+			if(event.kind._hx_index == 0) {
+				haxe_Log.trace(event.toString(),{ fileName : "Base2D.hx", lineNumber : 76, className : "Base2D", methodName : "setScreen"});
+				_gthis.s2d.removeChildren();
+				if(_gthis.isValidClick(_gthis.getX(event.toString()),_gthis.getY(event.toString()))) {
+					Base2D.score += 1;
+					_gthis.updateScreen();
+				} else {
+					hxd_Window.getInstance().removeEventTarget(onEvent);
+				}
+			} else {
+				haxe_Log.trace("other",{ fileName : "Base2D.hx", lineNumber : 86, className : "Base2D", methodName : "setScreen"});
+			}
+		};
+		hxd_Window.getInstance().addEventTarget(onEvent);
 	}
 	,init: function() {
 		this.setScreen();
