@@ -1,12 +1,16 @@
-import h2d.Object;
 import hxd.Window;
 import h2d.Scene;
+import h3d.pass.Base;
 import Random;
 
 class Base2D extends hxd.App {
 
   var obj : h2d.Object;
   var tf : h2d.Text;
+  static var score = 0;
+  static var xRandom = 450;
+  static var yRandom = 500;
+  static var squareSide = 25;
 
   static function loadOfficeMap(obj : h2d.Object, s2d) {
     //tile
@@ -17,8 +21,24 @@ class Base2D extends hxd.App {
     var bmp = new h2d.Bitmap(tile, obj);
   }
 
+  static function loadRectangle(s2d) {
+    // rectangle
+    xRandom = Random.int(450, 1350);
+    yRandom = Random.int(70, 800);
+    var customGraphics = new h2d.Graphics(s2d);
+    customGraphics.beginFill(0x000000);
+    customGraphics.drawRect(xRandom, yRandom, Base2D.squareSide, Base2D.squareSide);
+    customGraphics.endFill();
+  }
+
+  function updateScreen() {
+    Base2D.loadOfficeMap(new h2d.Object(s2d), s2d);
+    Base2D.loadRectangle(s2d);
+  }
+
   function setScreen() {
-    loadOfficeMap(new Object(s2d), s2d);
+    updateScreen();
+
   }
 
   //main entry point
