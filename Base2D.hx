@@ -41,6 +41,22 @@ class Base2D extends hxd.App {
     tf.scale(2);
   }
 
+  function gameOverScreen() {
+    updateScreen();
+
+    var customGraphics = new h2d.Graphics(s2d);
+    customGraphics.beginFill(0xFFFFFF);
+    customGraphics.drawRect(20, 150, 600, 150);
+    customGraphics.endFill();
+    var font : h2d.Font = hxd.Res.gravityFont.toFont();
+    var tf = new h2d.Text(font, s2d);
+    tf.textColor = 0x800080;
+    tf.text = "Click missed!!! Game Over";
+    tf.y = 200;
+    tf.x = 60;
+    tf.scale(2);
+  }
+  
   function isValidClick(x, y):Bool {
     return((x > Base2D.xRandom) && (x <= (Base2D.xRandom + Base2D.squareSide)) 
       && (y > Base2D.yRandom) && (y <= (Base2D.yRandom + Base2D.squareSide)));
@@ -81,7 +97,7 @@ class Base2D extends hxd.App {
           }
           else {
             Window.getInstance().removeEventTarget(onEvent);
-            //gameOverScreen();
+            gameOverScreen();
           }
         case _: trace('other');
       }
