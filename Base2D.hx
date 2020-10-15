@@ -2,6 +2,8 @@ import hxd.Window;
 import h2d.Scene;
 import h3d.pass.Base;
 import Random;
+import haxe.Timer;
+using StringTools;
 
 class Base2D extends hxd.App {
 
@@ -84,30 +86,31 @@ class Base2D extends hxd.App {
   }
 
   function setScreen() {
-    updateScreen();
-    //on Click / Event
-    function onEvent(event : hxd.Event) {
-      switch(event.kind) {
-        case EPush:
-          trace(event.toString());
-          s2d.removeChildren();
-          if(isValidClick(getX(event.toString()), getY(event.toString()))) {
-            Base2D.score = Base2D.score + 1;
-            updateScreen();
-          }
-          else {
-            Window.getInstance().removeEventTarget(onEvent);
-            gameOverScreen();
-          }
-        case _: trace('other');
-      }
-    }
-    hxd.Window.getInstance().addEventTarget(onEvent);
+   
   }
 
   //main entry point
   override function init() {
-    setScreen();
+    var timer = new Timer(3000);
+    timer.run = function() {
+      //setScreen();
+      updateScreen();
+      //on Click / Event
+      function onEvent(event : hxd.Event) {
+        //timer.stop();
+        switch(event.kind) {
+          case EPush:
+            trace(event.toString());
+            if(isValidClick(getX(event.toString()), getY(event.toString()))) {
+              Base2D.score = Base2D.score + 1;
+              s2d.removeChildren();
+              updateScreen();
+            }
+          case _: //trace('other');
+        }
+      }
+      hxd.Window.getInstance().addEventTarget(onEvent);
+    }
   }
 
   // if we the window has been resized
