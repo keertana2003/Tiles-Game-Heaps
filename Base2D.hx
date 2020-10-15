@@ -57,6 +57,8 @@ class Base2D extends hxd.App {
     tf.y = 200;
     tf.x = 60;
     tf.scale(2);
+
+    Base2D.score = 0;
   }
   
   function isValidClick(x, y):Bool {
@@ -105,6 +107,11 @@ class Base2D extends hxd.App {
               Base2D.score = Base2D.score + 1;
               s2d.removeChildren();
               updateScreen();
+            }
+            else {
+              Window.getInstance().removeEventTarget(onEvent);
+              gameOverScreen();
+              timer.stop();
             }
           case _: //trace('other');
         }
