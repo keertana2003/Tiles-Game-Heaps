@@ -236,6 +236,7 @@ Base2D.prototype = $extend(hxd_App.prototype,{
 		var _g = tf;
 		_g.posChanged = true;
 		_g.scaleY *= 2;
+		Base2D.score = 0;
 	}
 	,isValidClick: function(x,y) {
 		if(x > Base2D.xRandom && x <= Base2D.xRandom + Base2D.squareSide && y > Base2D.yRandom) {
@@ -252,13 +253,13 @@ Base2D.prototype = $extend(hxd_App.prototype,{
 	,getX: function(event) {
 		var eventX = event.split(",")[0];
 		eventX = HxOverrides.substr(eventX,6,eventX.length);
-		haxe_Log.trace(eventX,{ fileName : "Base2D.hx", lineNumber : 77, className : "Base2D", methodName : "getX"});
+		haxe_Log.trace(eventX,{ fileName : "Base2D.hx", lineNumber : 79, className : "Base2D", methodName : "getX"});
 		return Std.parseInt(eventX);
 	}
 	,getY: function(event) {
 		var eventY = event.split(",")[1];
 		eventY = HxOverrides.substr(eventY,0,eventY.length - 1);
-		haxe_Log.trace(eventY,{ fileName : "Base2D.hx", lineNumber : 84, className : "Base2D", methodName : "getY"});
+		haxe_Log.trace(eventY,{ fileName : "Base2D.hx", lineNumber : 86, className : "Base2D", methodName : "getY"});
 		return Std.parseInt(eventY);
 	}
 	,setScreen: function() {
@@ -268,13 +269,18 @@ Base2D.prototype = $extend(hxd_App.prototype,{
 		var timer = new haxe_Timer(3000);
 		timer.run = function() {
 			_gthis.updateScreen();
-			var onEvent = function(event) {
+			var onEvent = null;
+			onEvent = function(event) {
 				if(event.kind._hx_index == 0) {
-					haxe_Log.trace(event.toString(),{ fileName : "Base2D.hx", lineNumber : 103, className : "Base2D", methodName : "init"});
+					haxe_Log.trace(event.toString(),{ fileName : "Base2D.hx", lineNumber : 105, className : "Base2D", methodName : "init"});
 					if(_gthis.isValidClick(_gthis.getX(event.toString()),_gthis.getY(event.toString()))) {
 						Base2D.score += 1;
 						_gthis.s2d.removeChildren();
 						_gthis.updateScreen();
+					} else {
+						hxd_Window.getInstance().removeEventTarget(onEvent);
+						_gthis.gameOverScreen();
+						timer.stop();
 					}
 				}
 			};
@@ -23788,11 +23794,11 @@ h3d_impl_GlDriver.prototype = $extend(h3d_impl_Driver.prototype,{
 		var bufLen = pixels.stride * pixels.height;
 		var buffer;
 		switch(t.format._hx_index) {
-		case 4:case 7:case 10:case 13:
-			buffer = new Float32Array(pixels.bytes.b.buffer,pixels.offset,bufLen >> 2);
-			break;
 		case 3:case 6:case 9:case 12:
 			buffer = new Uint16Array(pixels.bytes.b.buffer,pixels.offset,bufLen >> 1);
+			break;
+		case 4:case 7:case 10:case 13:
+			buffer = new Float32Array(pixels.bytes.b.buffer,pixels.offset,bufLen >> 2);
 			break;
 		case 16:case 17:
 			buffer = new Uint32Array(pixels.bytes.b.buffer,pixels.offset,bufLen >> 2);
@@ -24289,11 +24295,11 @@ h3d_impl_GlDriver.prototype = $extend(h3d_impl_Driver.prototype,{
 		}
 		var buffer = pixels.bytes.b;
 		switch(this.curTarget.format._hx_index) {
-		case 4:case 7:case 10:case 13:
-			buffer = new Float32Array(buffer.buffer);
-			break;
 		case 3:case 6:case 9:case 12:
 			buffer = new Uint16Array(buffer.buffer);
+			break;
+		case 4:case 7:case 10:case 13:
+			buffer = new Float32Array(buffer.buffer);
 			break;
 		case 16:case 17:
 			buffer = new Uint32Array(buffer.buffer);
@@ -46993,8 +46999,8 @@ hxd_fmt_hmd_Library.prototype = {
 				l.addCurve(o.name,fl,true,rot,scale);
 			}
 			if((o.flags & 1 << hxd_fmt_hmd_AnimationFlag.HasUV._hx_index) != 0) {
-				var this2 = new Array(a.frames * 2);
-				var fl1 = this2;
+				var this11 = new Array(a.frames * 2);
+				var fl1 = this11;
 				var size1 = 8 * a.frames;
 				var data1 = new haxe_io_Bytes(new ArrayBuffer(size1));
 				entry.read(data1,0,size1);
@@ -47007,8 +47013,8 @@ hxd_fmt_hmd_Library.prototype = {
 				l.addUVCurve(o.name,fl1);
 			}
 			if((o.flags & 1 << hxd_fmt_hmd_AnimationFlag.HasAlpha._hx_index) != 0) {
-				var this3 = new Array(a.frames);
-				var fl2 = this3;
+				var this12 = new Array(a.frames);
+				var fl2 = this12;
 				var size2 = 4 * a.frames;
 				var data2 = new haxe_io_Bytes(new ArrayBuffer(size2));
 				entry.read(data2,0,size2);
@@ -47026,8 +47032,8 @@ hxd_fmt_hmd_Library.prototype = {
 				while(_g8 < _g9.length) {
 					var p1 = _g9[_g8];
 					++_g8;
-					var this4 = new Array(a.frames);
-					var fl3 = this4;
+					var this13 = new Array(a.frames);
+					var fl3 = this13;
 					var size3 = 4 * a.frames;
 					var data3 = new haxe_io_Bytes(new ArrayBuffer(size3));
 					entry.read(data3,0,size3);
